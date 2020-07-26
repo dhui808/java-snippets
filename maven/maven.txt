@@ -1,0 +1,2 @@
+to force download of dependency
+mvn dependency:purge-local-repository clean
