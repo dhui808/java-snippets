@@ -38,7 +38,8 @@ public class SpringRetryDemo {
   
   private class SpringRetryDemoDelegate {
   
-    @Retrable(maxAttempts = 3, backoff = @Backoff(delay = 1000})
+    //@Retrable(maxAttempts = 3, backoff = @Backoff(delay = 1000})
+    @Retrable(maxAttemptsExpression = "${retry.maxAttempts}", backoff = @Backoff(delayExpression = "${retry.delay}"})
     public ResponseEntity<List<Records>> doCustomerPost(HttpEntity<JsonNode> request) {
       response = restTemplate.exchange("/customers", HttpMethod.POST, request, new ParameterizedTypeReference<List<Records>>(){});
       return response;
