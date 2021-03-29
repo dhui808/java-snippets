@@ -1,0 +1,52 @@
+Readiness Probe: add/modify Helm configuration files:
+
+  1. Add templates/route-healthcheck.yaml to add a route
+  
+      ---
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        name: {{ .Values.route.name }}
+        labels: {{ .Values.route.labels }}
+        annotations:
+          {{- range $key, $value := .Values.route.annotations }}
+          {{ $key }}: {{ $value | quote }}
+          {{- end }}
+      spec:
+        path: /health
+        host: {{ .Values.route.path }}
+        port:
+          targetPort: {{ .Values.service.portName }}
+        to:
+          kind: Service
+          name: {{ .Values.service.name }}
+          weight: 100
+        wildcardPolicy: None
+      ...
+      
+  2. Modify application.yaml
+      management:
+        health:
+          redis:
+            enabled: false
+  3. Modify deployment_config.yaml
+      ...
+      readinessProbe:
+        httpGet:
+          path: /health
+          port: 8080
+        initialDelaySeconds: 15
+        timeoutSeconds: 1
+      ...
+
+Liveness Probe: add/modify Helm configuration files:
+
+  1. Modify deployment_config.yaml
+      ...
+      livenessProbe:
+        exec:
+          command:
+          - /usr/bin/pgrep -f app-SNAPSHOT.jar
+        initialDelaySeconds: 15
+        timeoutSeconds: 1
+      ...
