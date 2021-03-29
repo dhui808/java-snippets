@@ -46,7 +46,9 @@ Liveness Probe: add/modify Helm configuration files:
       livenessProbe:
         exec:
           command:
-          - /usr/bin/pgrep -f app-SNAPSHOT.jar
+          - /usr/bin/pgrep 
+          - -f 
+          - app-SNAPSHOT.jar
         initialDelaySeconds: 15
         timeoutSeconds: 1
       ...
