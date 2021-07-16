@@ -1,0 +1,7 @@
+		String path="/var/client/case1";
+		File file = new File(path);
+		try {
+			file.mkdirs();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
